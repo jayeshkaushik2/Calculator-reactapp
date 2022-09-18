@@ -72,20 +72,24 @@ const Calculator = () => {
         for (let i = 0; i < Value.length; i++) {
             let temp = Value[i]
             if (oprators_arr.includes(temp)) {
-                if (opr_found) {
-                    console.log(first, second, calculate(first, second, opr))
+                // 1. check if there is any first element available:
+                // -> reasign opr
+                // 2. first === "":
+                // -> no change
+                if (first !== "") {
+                    opr_found = true
+                }
+                if (first !== "" && second !== "") {
                     first = calculate(first, second, opr)
                     second = ""
                 }
-                else {
-                    opr_found = true
-                }
-                opr = temp
+                opr = temp;
+                first += temp
             }
             else if (!opr_found) {
                 first += temp
             }
-            else if (opr_found) {
+            else {
                 second += temp
             }
         }
@@ -100,7 +104,7 @@ const Calculator = () => {
 
     const handleOnClick = (val) => {
         if (val === "remove" && Value.length > 0) {
-            let temp = Value.slice(0, Value.length - 2)
+            let temp = Value.slice(0, Value.length - 1)
             setValue(temp)
         }
         if (val === "=") {
@@ -108,17 +112,15 @@ const Calculator = () => {
         }
         else if (digit_arr.includes(val) || oprators_arr.includes(val)) {
             let last_ele = Value[Value.length - 1]
-            if (oprators_arr.includes(val) && last_ele === val) {
-            }
-            else if (oprators_arr.includes(val) && oprators_arr.includes(last_ele)) {
-                let temp = Value.slice(0, Value.length - 2)
+            if (oprators_arr.includes(val) && oprators_arr.includes(last_ele) && last_ele !== val) {
+                let temp = Value.slice(0, Value.length - 1)
+                temp += val
                 setValue(temp)
             }
             else {
                 setValue(Value + val)
             }
         }
-        console.log("Value", Value)
     }
 
     return (
